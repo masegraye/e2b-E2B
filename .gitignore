@@ -4,8 +4,6 @@ vale-styles
 .DS_Store
 
 # Local development files
-e2b-local
-
 # Logs
 logs
 *.log

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# E2B Local Development CLI Wrapper
+# This script loads the local environment variables and runs the CLI
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load environment variables from .env.local
+if [ -f "$SCRIPT_DIR/.env.local" ]; then
+    export $(cat "$SCRIPT_DIR/.env.local" | grep -v '^#' | xargs)
+else
+    echo "Error: .env.local file not found at $SCRIPT_DIR/.env.local"
+    echo "Please create the .env.local file with your API key."
+    exit 1
+fi
+
+# Check if CLI is built
+if [ ! -f "$SCRIPT_DIR/packages/cli/dist/index.js" ]; then
+    echo "Error: CLI not built. Please run 'pnpm build' in packages/cli/"
+    exit 1
+fi
+
+# Run the CLI with all passed arguments
+node "$SCRIPT_DIR/packages/cli/dist/index.js" "$@"
